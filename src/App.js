@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Button } from 'react-bootstrap';
+import MyNav from './MyNav'; // Importa il componente MyNav
+import MyFooter from './MyFooter'; // Importa il componente MyFooter
+import Welcome from './Welcome'; // Importa il componente Welcome
+import AllTheBooks from './AllTheBooks'; // Importa il componente AllTheBooks
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <MyNav /> {/* Navbar */}
+      
+      <Welcome /> {/* Componente Welcome */}
+
+      <AllTheBooks /> {/* Componente AllTheBooks che mostra i libri */}
+      
+      {/* Contenuto principale */}
+      <Container className="text-center">
+        <Button variant="primary">Esplora</Button>
+      </Container>
+
+      <MyFooter /> {/* Footer */}
+    </>
   );
 }
 
 export default App;
+
+
+
+
