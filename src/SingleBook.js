@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
-import CommentArea from './CommentArea'; // Importiamo il componente CommentArea
+import React, { useState } from 'react';
+import { Card, Spinner, Alert } from 'react-bootstrap';
+import CommentArea from './CommentArea';
 
 function SingleBook({ book }) {
-  // Stato per tenere traccia se il libro è selezionato
   const [selected, setSelected] = useState(false);
 
   const handleSelectBook = () => {
-    setSelected(!selected); // Inverte il valore di selected
+    setSelected(!selected);
   };
 
   return (
@@ -16,17 +15,16 @@ function SingleBook({ book }) {
         variant="top"
         src={book.img}
         alt={book.title}
-        onClick={handleSelectBook} // Aggiungi un onClick per gestire il cambiamento di stato
+        onClick={handleSelectBook}
         style={{
-          cursor: 'pointer', // Cambia il cursore per far capire che è cliccabile
-          border: selected ? '5px solid red' : 'none', // Aggiungi il bordo rosso se il libro è selezionato
+          cursor: 'pointer',
+          border: selected ? '5px solid red' : 'none',
         }}
       />
       <Card.Body>
         <Card.Title>{book.title}</Card.Title>
         <Card.Text>Prezzo: ${book.price}</Card.Text>
 
-        {/* Mostra CommentArea solo se il libro è selezionato */}
         {selected && <CommentArea bookId={book.asin} />}
       </Card.Body>
     </Card>
@@ -34,6 +32,7 @@ function SingleBook({ book }) {
 }
 
 export default SingleBook;
+
 
 
 

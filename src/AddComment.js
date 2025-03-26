@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
 
 const AddComment = ({ bookId, onCommentAdded }) => {
   const [commentText, setCommentText] = useState('');
-  const [rating, setRating] = useState(1); // Rating da 1 a 5
-
-  const API_URL = `https://example.com/comments`; // Cambia con il tuo backend
+  const [rating, setRating] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const API_URL = `https://example.com/comments`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,44 +18,42 @@ const AddComment = ({ bookId, onCommentAdded }) => {
     };
 
     try {
+      setLoading(true);
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newComment),
       });
+      if (!response.ok) throw new Error('Errore nell\'invio del commento');
       const data = await response.json();
-      onCommentAdded(data); // Aggiungi il nuovo commento alla lista
-      setCommentText(''); // Pulisce il campo di testo
-      setRating(1); // Reset del rating
+      onCommentAdded(data);
+      setCommentText('');
+      setRating(1);
     } catch (error) {
-      console.error('Errore nell\'invio della recensione:', error);
+      console.error('Errore:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
+    <Form onSubmit={handleSubmit}>
+      <Form.Control
+        type="text"
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
         placeholder="Scrivi una recensione..."
         required
       />
-      <div>
-        <label>Valutazione:</label>
-        <select
-          value={rating}
-          onChange={(e) => setRating(parseInt(e.target.value))}
-        >
-          {[1, 2, 3, 4, 5].map((value) => (
-            <option key={value} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button type="submit">Invia</button>
-    </form>
+      <Form.Select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+        {[1, 2, 3, 4, 5].map((num) => (
+          <option key={num} value={num}>{num} ⭐</option>
+        ))}
+      </Form.Select>
+      <Button type="submit" disabled={loading}>{loading ? 'Invio...' : 'Invia'}</Button>
+    </Form>
   );
 };
 
 export default AddComment;
+

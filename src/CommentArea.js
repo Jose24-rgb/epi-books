@@ -1,41 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CommentList from './CommentList';
 import AddComment from './AddComment';
+import { Spinner, Alert } from 'react-bootstrap';
 
 const CommentArea = ({ bookId }) => {
   const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API_URL = `https://example.com/comments?bookId=${bookId}`;
 
-  const API_URL = `https://example.com/comments?bookId=${bookId}`; // Cambia con il tuo backend
-
-  // Fetch dei commenti (GET)
   useEffect(() => {
     const fetchComments = async () => {
       try {
+        setLoading(true);
         const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Errore nel recupero dei commenti');
         const data = await response.json();
         setComments(data);
-      } catch (error) {
-        console.error('Errore nel recupero commenti:', error);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchComments();
   }, [bookId]);
 
-  // Funzione per aggiungere un nuovo commento alla lista
-  const addNewComment = (newComment) => {
-    setComments((prevComments) => [...prevComments, newComment]);
+  // DELETE recensione
+  const deleteComment = async (id) => {
+    try {
+      const response = await fetch(`https://example.com/comments/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Errore nella cancellazione');
+      setComments(comments.filter((comment) => comment.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // PUT (Modifica recensione)
+  const updateComment = async (id, updatedText) => {
+    try {
+      const response = await fetch(`https://example.com/comments/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: updatedText }),
+      });
+      if (!response.ok) throw new Error('Errore nella modifica');
+      setComments(comments.map((c) => (c.id === id ? { ...c, text: updatedText } : c)));
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div>
-      <h4>Recensioni</h4>
-      <CommentList comments={comments} />
-      <AddComment bookId={bookId} onCommentAdded={addNewComment} />
+      {loading && <Spinner animation="border" />}
+      {error && <Alert variant="danger">{error}</Alert>}
+      <CommentList comments={comments} onDelete={deleteComment} onUpdate={updateComment} />
+      <AddComment bookId={bookId} onCommentAdded={(newComment) => setComments([...comments, newComment])} />
     </div>
   );
 };
 
 export default CommentArea;
+
 
 
