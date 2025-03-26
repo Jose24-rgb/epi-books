@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
+import CommentArea from './CommentArea'; // Importiamo il componente CommentArea
 
 function SingleBook({ book }) {
   // Stato per tenere traccia se il libro è selezionato
   const [selected, setSelected] = useState(false);
 
-  // Funzione per gestire il clic sulla copertina
   const handleSelectBook = () => {
     setSelected(!selected); // Inverte il valore di selected
   };
@@ -24,15 +24,18 @@ function SingleBook({ book }) {
       />
       <Card.Body>
         <Card.Title>{book.title}</Card.Title>
-        <Card.Text>
-          Prezzo: ${book.price}
-        </Card.Text>
+        <Card.Text>Prezzo: ${book.price}</Card.Text>
+
+        {/* Mostra CommentArea solo se il libro è selezionato */}
+        {selected && <CommentArea bookId={book.asin} />}
       </Card.Body>
     </Card>
   );
 }
 
 export default SingleBook;
+
+
 
 
 
