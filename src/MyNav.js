@@ -1,9 +1,13 @@
+// MyNav.js
 import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, Container, Form, Button } from 'react-bootstrap';
+import { useTheme } from './ThemeContext'; // Importiamo il hook useTheme
 
-function MyNav() {
+function MyNav({ searchQuery, setSearchQuery }) {
+  const { theme, toggleTheme } = useTheme(); // Otteniamo il tema dal contesto
+
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg={theme === 'light' ? 'light' : 'dark'} variant={theme === 'light' ? 'light' : 'dark'} expand="lg">
       <Container>
         <Navbar.Brand href="#">EpiBooks</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -13,6 +17,19 @@ function MyNav() {
             <Nav.Link href="#">About</Nav.Link>
             <Nav.Link href="#">Browse</Nav.Link>
           </Nav>
+          {/* Input di ricerca nella navbar */}
+          <Form className="d-flex ms-3">
+            <Form.Control
+              type="text"
+              placeholder="Cerca un libro..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Form>
+          {/* Pulsante per cambiare tema */}
+          <Button variant={theme === 'light' ? 'dark' : 'light'} onClick={toggleTheme} className="ms-3">
+            Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
+          </Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
@@ -20,4 +37,5 @@ function MyNav() {
 }
 
 export default MyNav;
+
 
