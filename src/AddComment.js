@@ -5,7 +5,9 @@ const AddComment = ({ bookId, onCommentAdded }) => {
   const [commentText, setCommentText] = useState('');
   const [rating, setRating] = useState(1);
   const [loading, setLoading] = useState(false);
-  const API_URL = `https://example.com/comments`;
+
+  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`;
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDMyOTI4NjcsImV4cCI6MTc0NDUwMjQ2N30.oVJJ-RaIoZARyEV9HKXnP_o_cbd8l1ijhDyDrAS3ZXM'; // Token inserito
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +23,10 @@ const AddComment = ({ bookId, onCommentAdded }) => {
       setLoading(true);
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Includi il token nell'header
+        },
         body: JSON.stringify(newComment),
       });
       if (!response.ok) throw new Error('Errore nell\'invio del commento');
@@ -56,4 +61,8 @@ const AddComment = ({ bookId, onCommentAdded }) => {
 };
 
 export default AddComment;
+
+
+
+
 

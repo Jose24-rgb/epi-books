@@ -1,4 +1,3 @@
-// ThemeContext.js
 import React, { createContext, useState, useContext } from 'react';
 
 // Creiamo il contesto del tema

@@ -1,4 +1,3 @@
-// MyNav.js
 import React from 'react';
 import { Navbar, Nav, Container, Form, Button } from 'react-bootstrap';
 import { useTheme } from './ThemeContext'; // Importiamo il hook useTheme

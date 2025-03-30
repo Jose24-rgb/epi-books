@@ -1,20 +1,19 @@
-// AllTheBooks.js
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import SingleBook from './SingleBook'; // Importa il componente SingleBook
-import horrorBooks from './horror.json'; // Assicurati che il percorso del file JSON sia corretto
-import { useTheme } from './ThemeContext'; // Importiamo il hook useTheme
+import SingleBook from './SingleBook';
+import CommentArea from './CommentArea';
+import horrorBooks from './horror.json';
+import { useTheme } from './ThemeContext';
 
 function AllTheBooks({ searchQuery }) {
-  const [books, setBooks] = useState([]); // Stato per memorizzare i libri
-  const { theme } = useTheme(); // Otteniamo il tema dal contesto
+  const [books, setBooks] = useState([]);
+  const [selectedBookAsin, setSelectedBookAsin] = useState(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
-    // Carica i dati dal file JSON
-    setBooks(horrorBooks); // Imposta i dati dei libri nell'array "books"
-  }, []); // useEffect viene eseguito una sola volta al caricamento del componente
+    setBooks(horrorBooks);
+  }, []);
 
-  // Filtra i libri in base al titolo, mostrando solo quelli che contengono la query di ricerca
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -22,12 +21,18 @@ function AllTheBooks({ searchQuery }) {
   return (
     <Container className="mt-5" style={{ backgroundColor: theme === 'light' ? '#f8f9fa' : '#343a40' }}>
       <Row>
-        {/* Renderizza solo i libri filtrati */}
-        {filteredBooks.map((book, index) => (
-          <Col key={index} sm={12} md={4} lg={3} className="mb-4">
-            <SingleBook book={book} /> {/* Passa ogni libro come prop al componente SingleBook */}
-          </Col>
-        ))}
+        <Col md={8}>
+          <Row>
+            {filteredBooks.map((book) => (
+              <Col key={book.asin} sm={12} md={4} lg={3} className="mb-4">
+                <SingleBook book={book} selectedBookAsin={selectedBookAsin} setSelectedBookAsin={setSelectedBookAsin} />
+              </Col>
+            ))}
+          </Row>
+        </Col>
+        <Col md={4}>
+          <CommentArea bookId={selectedBookAsin} />
+        </Col>
       </Row>
     </Container>
   );

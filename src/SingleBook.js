@@ -1,15 +1,12 @@
-// SingleBook.js
-import React, { useState } from 'react';
-import { Card, Spinner, Alert } from 'react-bootstrap';
-import CommentArea from './CommentArea';
-import { useTheme } from './ThemeContext'; // Importiamo il hook useTheme
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { useTheme } from './ThemeContext';
 
-function SingleBook({ book }) {
-  const [selected, setSelected] = useState(false);
-  const { theme } = useTheme(); // Otteniamo il tema dal contesto
+function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
+  const { theme } = useTheme();
 
   const handleSelectBook = () => {
-    setSelected(!selected);
+    setSelectedBookAsin(book.asin);
   };
 
   return (
@@ -17,6 +14,7 @@ function SingleBook({ book }) {
       style={{
         backgroundColor: theme === 'light' ? '#ffffff' : '#495057',
         color: theme === 'light' ? 'black' : 'white',
+        border: selectedBookAsin === book.asin ? '5px solid red' : 'none',
       }}
     >
       <Card.Img
@@ -24,16 +22,11 @@ function SingleBook({ book }) {
         src={book.img}
         alt={book.title}
         onClick={handleSelectBook}
-        style={{
-          cursor: 'pointer',
-          border: selected ? '5px solid red' : 'none',
-        }}
+        style={{ cursor: 'pointer' }}
       />
       <Card.Body>
         <Card.Title>{book.title}</Card.Title>
         <Card.Text>Prezzo: ${book.price}</Card.Text>
-
-        {selected && <CommentArea bookId={book.asin} />}
       </Card.Body>
     </Card>
   );
