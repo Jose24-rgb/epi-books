@@ -29,7 +29,7 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
               </>
             ) : (
               <>
-                <p>{comment.text} - {new Date(comment.date).toLocaleDateString()}</p>
+                <p>{comment.comment} - {new Date(comment.createdAt).toLocaleDateString()}</p>
                 <Button 
                   variant="danger" 
                   size="sm" 
