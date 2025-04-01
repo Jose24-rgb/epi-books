@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';  // Per ottenere il parametro dalla rotta
-import horrorBooks from './horror.json'; // Importa il file JSON con l'array di libri
-import { Container, Row, Col, Card } from 'react-bootstrap'; // Componenti Bootstrap per layout
+import { useParams } from 'react-router-dom';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import horrorBooks from './horror.json';  // Importa il file JSON, se presente
 
 function BookDetails() {
-  const { asin } = useParams(); // Ottieni l'ASIN dalla rotta
+  const { asin } = useParams();
   const [bookDetails, setBookDetails] = useState(null);
+  const [comments, setComments] = useState([]);
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY'; // Sostituisci con il token di autenticazione
 
   useEffect(() => {
-    // Trova il libro con l'ASIN corrispondente
-    const foundBook = horrorBooks.find(book => book.asin === asin);
-    setBookDetails(foundBook); // Salva i dettagli del libro trovato nello stato
-  }, [asin]); // Esegui ogni volta che l'ASIN cambia
+    const fetchBookDetails = async () => {
+      // Recupera i dettagli del libro dal file JSON o dall'API (se pertinente)
+      const foundBook = horrorBooks.find(book => book.asin === asin);  // Trova il libro con l'asin
+      setBookDetails(foundBook);
 
-  if (!bookDetails) {
-    return <div>Caricamento...</div>;  // Mostra "Caricamento..." se il libro non è ancora trovato
-  }
+      // Recupera i commenti per il libro dal backend
+      const response = await fetch(`https://striveschool-api.herokuapp.com/api/books/${asin}/comments/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setComments(data);
+    };
+
+    fetchBookDetails();
+  }, [asin]);
+
+  if (!bookDetails) return <div>Caricamento...</div>;
 
   return (
     <Container className="mt-5">
       <Row>
         <Col md={6}>
-          {/* Visualizza i dettagli del libro */}
           <Card>
             <Card.Img variant="top" src={bookDetails.img} alt={bookDetails.title} />
             <Card.Body>
@@ -33,11 +46,10 @@ function BookDetails() {
           </Card>
         </Col>
         <Col md={6}>
-          {/* Sezione per le recensioni */}
           <h3>Recensioni</h3>
           <ul>
-            {bookDetails.reviews && bookDetails.reviews.length > 0 ? (
-              bookDetails.reviews.map((review, index) => (
+            {comments.length > 0 ? (
+              comments.map((review, index) => (
                 <li key={index}>
                   <p><strong>{review.author}:</strong> {review.comment}</p>
                   <p><em>Valutazione: {review.rating} stelle</em></p>
@@ -54,4 +66,6 @@ function BookDetails() {
 }
 
 export default BookDetails;
+
+
 
