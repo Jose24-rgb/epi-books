@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import horrorBooks from '../horror.json';  // Importa il file JSON, se presente
+import horrorBooks from '../horror.json';
 
 function BookDetails() {
   const { asin } = useParams();
   const [bookDetails, setBookDetails] = useState(null);
   const [comments, setComments] = useState([]);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY'; // Sostituisci con il token di autenticazione
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
 
   useEffect(() => {
     const fetchBookDetails = async () => {
-      // Recupera i dettagli del libro dal file JSON o dall'API (se pertinente)
-      const foundBook = horrorBooks.find(book => book.asin === asin);  // Trova il libro con l'asin
+      const foundBook = horrorBooks.find(book => book.asin === asin);
       setBookDetails(foundBook);
 
-      // Recupera i commenti per il libro dal backend
       const response = await fetch(`https://striveschool-api.herokuapp.com/api/books/${asin}/comments/`, {
         method: 'GET',
         headers: {

@@ -7,14 +7,14 @@ import { useTheme } from '../ThemeContext';
 
 function AllTheBooks({ searchQuery }) {
   const [books, setBooks] = useState([]);
-  const [selectedBookAsin, setSelectedBookAsin] = useState(null); // Gestione centrale dello stato
+  const [selectedBookAsin, setSelectedBookAsin] = useState(null);
   const { theme } = useTheme();
 
   useEffect(() => {
     setBooks(horrorBooks);
   }, []);
 
-  // Filtraggio dei libri in base alla ricerca
+ 
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -28,8 +28,8 @@ function AllTheBooks({ searchQuery }) {
               <Col key={book.asin} sm={12} md={4} lg={3} className="mb-4">
                 <SingleBook
                   book={book}
-                  selectedBookAsin={selectedBookAsin} // Passiamo l'asin selezionato
-                  setSelectedBookAsin={setSelectedBookAsin} // Passiamo la funzione per aggiornare
+                  selectedBookAsin={selectedBookAsin}
+                  setSelectedBookAsin={setSelectedBookAsin}
                 />
               </Col>
             ))}
@@ -37,7 +37,7 @@ function AllTheBooks({ searchQuery }) {
         </Col>
         <Col md={4}>
           <CommentArea
-            bookAsin={selectedBookAsin} // Passiamo l'asin selezionato a CommentArea
+            bookAsin={selectedBookAsin}
           />
         </Col>
       </Row>

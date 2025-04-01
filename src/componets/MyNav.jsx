@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navbar, Nav, Container, Form, Button } from 'react-bootstrap';
-import { useTheme } from '../ThemeContext'; // Importiamo il hook useTheme
+import { useTheme } from '../ThemeContext';
 
 function MyNav({ searchQuery, setSearchQuery }) {
-  const { theme, toggleTheme } = useTheme(); // Otteniamo il tema dal contesto
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <Navbar bg={theme === 'light' ? 'light' : 'dark'} variant={theme === 'light' ? 'light' : 'dark'} expand="lg">

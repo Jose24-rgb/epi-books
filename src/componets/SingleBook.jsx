@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';  // Importa Link da React Router
+import { Link } from 'react-router-dom';
 import { useTheme } from '../ThemeContext';
 
 function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
   const { theme } = useTheme();
 
   const handleSelectBook = () => {
-    setSelectedBookAsin(book.asin); // Impostiamo l'asin selezionato nel genitore
+    setSelectedBookAsin(book.asin);
   };
 
   return (

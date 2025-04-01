@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 const Reviews = ({ bookId }) => {
-  const [reviews, setReviews] = useState([]); // Stato per le recensioni
-  const [reviewText, setReviewText] = useState(""); // Stato per il form
+  const [reviews, setReviews] = useState([]);
+  const [reviewText, setReviewText] = useState(""); 
 
-  const API_URL = "https://tuo-backend.com/reviews"; // Sostituisci con il vero URL
+  const API_URL = "https://striveschool-api.herokuapp.com/api/comments/?elementId=${bookAsin}";
 
-  // Fetch delle recensioni (GET)
   const fetchReviews = () => {
     fetch(`${API_URL}?bookId=${bookId}`)
       .then((response) => response.json())
@@ -15,10 +14,9 @@ const Reviews = ({ bookId }) => {
   };
 
   useEffect(() => {
-    fetchReviews(); // Chiama la funzione quando il componente si monta
+    fetchReviews();
   }, [bookId]);
 
-  // Funzione per inviare una nuova recensione (POST)
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -35,8 +33,8 @@ const Reviews = ({ bookId }) => {
     })
       .then((response) => response.json())
       .then(() => {
-        setReviewText(""); // Pulisce il form
-        fetchReviews(); // Aggiorna le recensioni dopo il POST
+        setReviewText("");
+        fetchReviews();
       })
       .catch((error) => console.error("Errore nell'invio della recensione:", error));
   };

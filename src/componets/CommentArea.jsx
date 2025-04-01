@@ -12,11 +12,11 @@ const CommentArea = ({ bookAsin }) => {
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
 
   useEffect(() => {
-    if (!bookAsin) return;  // Non fare la fetch se non c'è un libro selezionato
+    if (!bookAsin) return;
 
     const fetchComments = async () => {
       try {
-        setLoading(true); // Impostiamo lo stato di caricamento
+        setLoading(true);
 
         const response = await fetch(API_URL, {
           method: 'GET',
@@ -43,10 +43,9 @@ const CommentArea = ({ bookAsin }) => {
       }
     };
 
-    fetchComments();  // Esegui la fetch ogni volta che cambia `bookAsin`
+    fetchComments(); 
   }, [bookAsin]);
 
-  // Funzione per eliminare un commento
   const handleDeleteComment = async (commentId) => {
     setLoading(true);
     setError(null);
@@ -63,7 +62,6 @@ const CommentArea = ({ bookAsin }) => {
         throw new Error('Errore durante l\'eliminazione del commento');
       }
 
-      // Rimuoviamo il commento dalla lista localmente
       setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
     } catch (err) {
       setError(err.message);
@@ -72,7 +70,6 @@ const CommentArea = ({ bookAsin }) => {
     }
   };
 
-  // Funzione per aggiornare un commento
   const handleUpdateComment = async (commentId, updatedText) => {
     setLoading(true);
     setError(null);

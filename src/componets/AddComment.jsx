@@ -16,7 +16,7 @@ const AddComment = ({ bookAsin, onCommentAdded }) => {
     const newComment = {
       comment: commentText,
       rate: rating,
-      elementId: bookAsin,  // Passiamo l'ASIN del libro selezionato
+      elementId: bookAsin,
     };
 
     try {
