@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';  // Importa Link da React Router
 import { useTheme } from './ThemeContext';
 
 function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
@@ -27,12 +28,19 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
       <Card.Body>
         <Card.Title>{book.title}</Card.Title>
         <Card.Text>Prezzo: ${book.price}</Card.Text>
+
+        {/* Pulsante per navigare alla pagina dei dettagli */}
+        <Link to={`/book/${book.asin}`}>
+          <Button variant="primary">Vedi Dettagli</Button>
+        </Link>
       </Card.Body>
     </Card>
   );
 }
 
 export default SingleBook;
+
+
 
 
 
