@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import horrorBooks from './horror.json';  // Importa il file JSON, se presente
+import horrorBooks from '../horror.json';  // Importa il file JSON, se presente
 
 function BookDetails() {
   const { asin } = useParams();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';  // Importa Link da React Router
-import { useTheme } from './ThemeContext';
+import { useTheme } from '../ThemeContext';
 
 function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
   const { theme } = useTheme();

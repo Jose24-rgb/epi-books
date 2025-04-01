@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import SingleBook from './SingleBook';
 import CommentArea from './CommentArea';
-import horrorBooks from './horror.json';
-import { useTheme } from './ThemeContext';
+import horrorBooks from '../horror.json';
+import { useTheme } from '../ThemeContext';
 
 function AllTheBooks({ searchQuery }) {
   const [books, setBooks] = useState([]);
