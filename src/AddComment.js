@@ -1,41 +1,45 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Spinner, Alert } from 'react-bootstrap';
 
-const AddComment = ({ bookId, onCommentAdded }) => {
+const AddComment = ({ bookAsin, onCommentAdded }) => {
   const [commentText, setCommentText] = useState('');
   const [rating, setRating] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`;
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDMyOTI4NjcsImV4cCI6MTc0NDUwMjQ2N30.oVJJ-RaIoZARyEV9HKXnP_o_cbd8l1ijhDyDrAS3ZXM'; // Token inserito
+  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/${bookAsin}`;
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY'; 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newComment = {
-      bookId,
-      text: commentText,
-      rating,
-      date: new Date().toISOString(),
+      comment: commentText,
+      rate: rating,
+      elementId: bookAsin,  // Passiamo l'ASIN del libro selezionato
     };
 
     try {
       setLoading(true);
+      setError(null);
+
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Includi il token nell'header
+          Authorization: `Bearer ${token}`, 
         },
         body: JSON.stringify(newComment),
       });
-      if (!response.ok) throw new Error('Errore nell\'invio del commento');
+
+      if (!response.ok) throw new Error("Errore nell'invio del commento");
+
       const data = await response.json();
       onCommentAdded(data);
       setCommentText('');
       setRating(1);
-    } catch (error) {
-      console.error('Errore:', error);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -43,6 +47,7 @@ const AddComment = ({ bookId, onCommentAdded }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      {error && <Alert variant="danger">{error}</Alert>}
       <Form.Control
         type="text"
         value={commentText}
@@ -55,12 +60,18 @@ const AddComment = ({ bookId, onCommentAdded }) => {
           <option key={num} value={num}>{num} ⭐</option>
         ))}
       </Form.Select>
-      <Button type="submit" disabled={loading}>{loading ? 'Invio...' : 'Invia'}</Button>
+
+      <Button type="submit" disabled={loading}>
+        {loading ? <Spinner animation="border" size="sm" /> : 'Invia'}
+      </Button>
     </Form>
   );
 };
 
 export default AddComment;
+
+
+
 
 
 

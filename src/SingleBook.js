@@ -6,7 +6,7 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
   const { theme } = useTheme();
 
   const handleSelectBook = () => {
-    setSelectedBookAsin(book.asin);
+    setSelectedBookAsin(book.asin); // Impostiamo l'asin selezionato nel genitore
   };
 
   return (
@@ -33,6 +33,8 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
 }
 
 export default SingleBook;
+
+
 
 
 

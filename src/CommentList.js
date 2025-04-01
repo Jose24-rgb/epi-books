@@ -17,13 +17,35 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
                 />
-                <Button size="sm" onClick={() => { onUpdate(comment.id, editText); setEditingId(null); }}>Salva</Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => { 
+                    onUpdate(comment.id, editText); 
+                    setEditingId(null); 
+                  }}
+                >
+                  Salva
+                </Button>
               </>
             ) : (
               <>
-                {comment.text} - {new Date(comment.date).toLocaleDateString()}
-                <Button variant="danger" size="sm" onClick={() => onDelete(comment.id)}>Elimina</Button>
-                <Button size="sm" onClick={() => { setEditingId(comment.id); setEditText(comment.text); }}>Modifica</Button>
+                <p>{comment.text} - {new Date(comment.date).toLocaleDateString()}</p>
+                <Button 
+                  variant="danger" 
+                  size="sm" 
+                  onClick={() => onDelete(comment.id)}
+                >
+                  Elimina
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={() => { 
+                    setEditingId(comment.id); 
+                    setEditText(comment.text); 
+                  }}
+                >
+                  Modifica
+                </Button>
               </>
             )}
           </li>
@@ -36,4 +58,5 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
 };
 
 export default CommentList;
+
 
