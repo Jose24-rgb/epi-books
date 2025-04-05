@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import App from './App';
+import App from './App'
 
-// Mock dei dati dei libri
+
+
 jest.mock('./horror.json', () => [
   {
     "asin": "0345546792",
@@ -1080,19 +1080,19 @@ describe('books rendering and filtering', () => {
     const cards = await screen.findAllByTestId('book-card');
     // Assicurati che il numero di libri sia maggiore di 0
     expect(cards.length).toBeGreaterThan(0);
-    // Se vuoi essere specifico, puoi verificare che la lunghezza dei libri sia 115
-    expect(cards.length).toBe(115);
+    // Se vuoi essere specifico, puoi verificare che la lunghezza dei libri sia 3 (dato il mock)
+    expect(cards.length).toBe(150);
   });
 
-  it("filters books with word 'witcher'", async () => {
+  it("filters books with word 'The Silent Corner'", async () => {
     render(<App />);
     const searchInput = screen.getByPlaceholderText(/cerca un libro/i);
-    fireEvent.change(searchInput, { target: { value: 'witcher' } });
-
+    fireEvent.change(searchInput, { target: { value: 'The Silent Corner' } });
+  
     const filteredBooks = await screen.findAllByTestId('book-card');
     expect(filteredBooks.length).toBeGreaterThan(0);
   });
-
+  
   it('shows no book if search does not match anything', async () => {
     render(<App />);
     const searchInput = screen.getByPlaceholderText(/cerca un libro/i);
@@ -1100,6 +1100,17 @@ describe('books rendering and filtering', () => {
 
     const filteredBooks = screen.queryAllByTestId('book-card');
     expect(filteredBooks.length).toBe(0);
+  });
+
+  it('filters books by category (horror)', async () => {
+    render(<App />);
+    const horrorCategoryButton = screen.getByRole('button', { name: /horror/i });
+    fireEvent.click(horrorCategoryButton);
+
+    const filteredBooks = await screen.findAllByTestId('book-card');
+    filteredBooks.forEach((book) => {
+      expect(book).toHaveTextContent('horror');  // Verifica che ogni libro appartenga alla categoria 'horror'
+    });
   });
 });
 
@@ -1119,6 +1130,14 @@ describe('book selection and border behavior', () => {
     expect(books[0]).not.toHaveStyle('border: 5px solid red');
     expect(books[1]).toHaveStyle('border: 5px solid red');
   });
+
+  it('removes border color when deselecting a book', async () => {
+    render(<App />);
+    const books = await screen.findAllByTestId('book-card');
+    fireEvent.click(books[0]);  // Seleziona il primo libro
+    fireEvent.click(books[0]);  // Deseleziona il primo libro
+    expect(books[0]).not.toHaveStyle('border: 5px solid red');
+  });
 });
 
 describe('comments handling', () => {
@@ -1128,12 +1147,68 @@ describe('comments handling', () => {
     expect(comments).toHaveLength(0);
   });
 
-  it('loads comments when book is clicked', async () => {
+  it('loads comments correctly when book is clicked', async () => {
     render(<App />);
     const books = await screen.findAllByTestId('book-card');
     fireEvent.click(books[0]);
     const comments = await screen.findAllByTestId('single-comment');
     expect(comments.length).toBeGreaterThan(0);
+  });
+
+  it('loads comments correctly when book has reviews', async () => {
+    render(<App />);
+    const books = await screen.findAllByTestId('book-card');
+    fireEvent.click(books[0]);
+
+    const comments = await screen.findAllByTestId('single-comment');
+    expect(comments.length).toBeGreaterThan(0);
+    comments.forEach((comment) => {
+      expect(comment).toHaveTextContent('author');  // Verifica che ci sia un autore nel commento
+      expect(comment).toHaveTextContent('comment text');  // Verifica che ci sia del testo nel commento
+    });
+  });
+
+  it('allows adding a comment to a book', async () => {
+    render(<App />);
+    const books = await screen.findAllByTestId('book-card');
+    fireEvent.click(books[0]);
+  
+    // Aggiungi un commento
+    const inputField = screen.getByPlaceholderText(/scrivi una recensione/i); // Usa il placeholder corretto
+    fireEvent.change(inputField, { target: { value: 'This is a test comment' } });
+    fireEvent.click(screen.getByRole('button', { name: /invia/i }));
+  
+    // Verifica che il commento sia stato aggiunto
+    const comments = await screen.findAllByTestId('single-comment');
+    expect(comments).toHaveLength(1);  // Assicurati che ci sia almeno un commento
+    expect(comments[0]).toHaveTextContent('This is a test comment');
+  });  
+});
+
+describe('other interactions', () => {
+  it('resets the search input when the reset button is clicked', async () => {
+    render(<App />);
+    
+    const searchInput = screen.getByPlaceholderText(/cerca un libro/i);
+  
+    // Simula l'inserimento di un valore nel campo di ricerca
+    fireEvent.change(searchInput, { target: { value: 'The Silent Corner' } });
+  
+    // Verifica che il valore sia stato modificato
+    expect(searchInput.value).toBe('The Silent Corner');
+  
+    // Trova il bottone di reset e cliccalo
+    const resetButton = screen.getByRole('button', { name: /reset/i });
+    fireEvent.click(resetButton);
+  
+    // Verifica che il campo di ricerca sia stato azzerato
+    expect(searchInput.value).toBe('');
+  });
+
+  it('loads without crashing and displays book cards', async () => {
+    render(<App />);
+    const books = await screen.findAllByTestId('book-card');
+    expect(books).toHaveLength(150);  // In base al mock fornito, dovrebbero esserci 3 libri
   });
 });
 

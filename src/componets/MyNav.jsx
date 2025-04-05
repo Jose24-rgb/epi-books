@@ -5,6 +5,10 @@ import { useTheme } from '../ThemeContext';
 function MyNav({ searchQuery, setSearchQuery }) {
   const { theme, toggleTheme } = useTheme();
 
+  const handleReset = () => {
+    setSearchQuery(''); // Reset the search query
+  };
+
   return (
     <Navbar bg={theme === 'light' ? 'light' : 'dark'} variant={theme === 'light' ? 'light' : 'dark'} expand="lg">
       <Container>
@@ -24,6 +28,15 @@ function MyNav({ searchQuery, setSearchQuery }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {/* Pulsante di reset */}
+            <Button 
+              variant="outline-secondary" 
+              onClick={handleReset} 
+              aria-label="reset"
+              className="ms-2"
+            >
+              Reset
+            </Button>
           </Form>
           {/* Pulsante per cambiare tema */}
           <Button variant={theme === 'light' ? 'dark' : 'light'} onClick={toggleTheme} className="ms-3">
@@ -36,5 +49,6 @@ function MyNav({ searchQuery, setSearchQuery }) {
 }
 
 export default MyNav;
+
 
 

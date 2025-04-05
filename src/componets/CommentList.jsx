@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 
 const CommentList = ({ comments, onDelete, onUpdate }) => {
   const [editingId, setEditingId] = useState(null);
-  const [editText, setEditText] = useState('');
+  const [editComment, setEditComment] = useState('');
 
   return (
     <ul>
@@ -14,13 +14,13 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
               <>
                 <Form.Control
                   type="text"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
+                  value={editComment}
+                  onChange={(e) => setEditComment(e.target.value)}
                 />
                 <Button 
                   size="sm" 
                   onClick={() => { 
-                    onUpdate(comment.id, editText); 
+                    onUpdate(comment.id, editComment); 
                     setEditingId(null); 
                   }}
                 >
@@ -41,7 +41,7 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
                   size="sm" 
                   onClick={() => { 
                     setEditingId(comment.id); 
-                    setEditText(comment.text); 
+                    setEditComment(comment.comment); 
                   }}
                 >
                   Modifica
@@ -58,5 +58,6 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
 };
 
 export default CommentList;
+
 
 

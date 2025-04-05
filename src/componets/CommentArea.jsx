@@ -70,7 +70,7 @@ const CommentArea = ({ bookAsin }) => {
     }
   };
 
-  const handleUpdateComment = async (commentId, updatedText) => {
+  const handleUpdateComment = async (commentId, updatedComment) => {
     setLoading(true);
     setError(null);
 
@@ -81,17 +81,17 @@ const CommentArea = ({ bookAsin }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ text: updatedText }),
+        body: JSON.stringify({ comment: updatedComment }),
       });
 
       if (!response.ok) {
         throw new Error('Errore durante l\'aggiornamento del commento');
       }
 
-      const updatedComment = await response.json();
+      const updatedCommentData = await response.json();
       setComments((prevComments) =>
         prevComments.map((comment) =>
-          comment.id === commentId ? { ...comment, text: updatedText } : comment
+          comment.id === commentId ? { ...comment, comment: updatedComment } : comment
         )
       );
     } catch (err) {
@@ -116,6 +116,7 @@ const CommentArea = ({ bookAsin }) => {
 };
 
 export default CommentArea;
+
 
 
 
