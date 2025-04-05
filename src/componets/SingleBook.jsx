@@ -12,6 +12,7 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
 
   return (
     <Card
+      data-testid="book-card"
       style={{
         backgroundColor: theme === 'light' ? '#ffffff' : '#495057',
         color: theme === 'light' ? 'black' : 'white',
@@ -39,6 +40,7 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
 }
 
 export default SingleBook;
+
 
 
 

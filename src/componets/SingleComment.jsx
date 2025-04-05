@@ -2,7 +2,7 @@ import React from 'react';
 
 const SingleComment = ({ comment }) => {
   return (
-    <li>
+    <li data-testid="single-comment">
       <p>{comment.text}</p>
       <small>{new Date(comment.date).toLocaleDateString()}</small>
     </li>
@@ -10,4 +10,5 @@ const SingleComment = ({ comment }) => {
 };
 
 export default SingleComment;
+
 
