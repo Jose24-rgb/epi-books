@@ -2,19 +2,18 @@ import React, { useEffect, useState } from 'react';
 import CommentList from './CommentList';
 import AddComment from './AddComment';
 import Loading from './Loading';
-import Error from './Error'; 
+import Error from './Error';
 
-const CommentArea = ({ bookAsin }) => {
+const CommentArea = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/?elementId=${bookAsin}`;
+  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`; // Modifica qui per prendere tutti i commenti
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
 
+  // Recupera i commenti all'inizio, senza bisogno di selezionare un libro
   useEffect(() => {
-    if (!bookAsin) return;
-
     const fetchComments = async () => {
       setIsLoading(true);
       setIsError(false);
@@ -34,7 +33,7 @@ const CommentArea = ({ bookAsin }) => {
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
-          setComments(data);
+          setComments(data); // Salva tutti i commenti ricevuti
         } else {
           throw new Error('Nessun commento disponibile');
         }
@@ -47,7 +46,7 @@ const CommentArea = ({ bookAsin }) => {
     };
 
     fetchComments();
-  }, [bookAsin]);
+  }, []); // Questo effetto si esegue solo una volta, al caricamento del componente
 
   const handleDeleteComment = async (commentId) => {
     setIsLoading(true);
@@ -110,17 +109,25 @@ const CommentArea = ({ bookAsin }) => {
     <div className="text-center">
       {isLoading && <Loading />}
       {isError && <Error />}
+
+      {/* Modulo per aggiungere un nuovo commento */}
+      <AddComment 
+        bookAsin="book-asin-placeholder" 
+        onCommentAdded={(newComment) => setComments((prevComments) => [newComment, ...prevComments])} 
+      />
+
+      {/* Lista dei commenti */}
       <CommentList
         comments={comments}
         onDelete={handleDeleteComment}
         onUpdate={handleUpdateComment}
       />
-      <AddComment bookAsin={bookAsin} onCommentAdded={(newComment) => setComments([...comments, newComment])} />
     </div>
   );
 };
 
 export default CommentArea;
+
 
 
 
