@@ -1325,3 +1325,41 @@ describe('Test iniziale della pagina', () => {
 
 
 
+/*global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve([
+      { _id: '1', comment: 'Ottimo libro!', date: '2025-04-06' },
+      { _id: '2', comment: 'Mi è piaciuto molto', date: '2025-04-05' },
+    ]),
+  })
+);
+
+describe('Test della selezione del libro e caricamento recensioni', () => {
+  test('verifica che le recensioni siano caricate quando un libro viene selezionato', async () => {
+    // Rendering del componente App, che contiene la logica per selezionare un libro
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    );
+
+  
+    const bookCard = await screen.findByTestId('book-card');
+    expect(bookCard).toBeInTheDocument();
+
+    
+    fireEvent.click(bookCard);
+
+   
+    await waitFor(() => {
+      const commentsList = screen.getByRole('list');
+      expect(commentsList).toBeInTheDocument();
+    });
+
+    
+    const comment1 = screen.getByText('Ottimo libro!');
+    const comment2 = screen.getByText('Mi è piaciuto molto');
+    expect(comment1).toBeInTheDocument();
+    expect(comment2).toBeInTheDocument();
+  });
+}); */ /* (NON SONO RIUSCITO CON QUESTO)*/
