@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Spinner, Alert } from 'react-bootstrap';
 import CommentList from './CommentList';
 import AddComment from './AddComment';
+import Loading from './Loading'; // Importa il componente Loading
+import Error from './Error';     // Importa il componente Error
 
 const CommentArea = ({ bookAsin }) => {
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const API_URL = `https://striveschool-api.herokuapp.com/api/comments/?elementId=${bookAsin}`;
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
@@ -15,9 +16,10 @@ const CommentArea = ({ bookAsin }) => {
     if (!bookAsin) return;
 
     const fetchComments = async () => {
-      try {
-        setLoading(true);
+      setIsLoading(true);
+      setIsError(false); // Resetta gli errori ad ogni nuovo fetch
 
+      try {
         const response = await fetch(API_URL, {
           method: 'GET',
           headers: {
@@ -26,7 +28,7 @@ const CommentArea = ({ bookAsin }) => {
         });
 
         if (!response.ok) {
-          throw new Error(`Errore nel recupero dei commenti. Status code: ${response.status}`);
+          throw new Error('Errore nel recupero dei commenti');
         }
 
         const data = await response.json();
@@ -37,18 +39,19 @@ const CommentArea = ({ bookAsin }) => {
           throw new Error('Nessun commento disponibile');
         }
       } catch (err) {
-        setError(err.message);
+        setIsError(true); // Imposta l'errore se qualcosa va storto
+        console.error(err);
       } finally {
-        setLoading(false);
+        setIsLoading(false); // Al termine, ferma il loading
       }
     };
 
-    fetchComments(); 
+    fetchComments();
   }, [bookAsin]);
 
   const handleDeleteComment = async (commentId) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(false);
 
     try {
       const response = await fetch(`https://striveschool-api.herokuapp.com/api/comments/${commentId}`, {
@@ -62,17 +65,18 @@ const CommentArea = ({ bookAsin }) => {
         throw new Error('Errore durante l\'eliminazione del commento');
       }
 
-      setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
+      setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
     } catch (err) {
-      setError(err.message);
+      setIsError(true);
+      console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const handleUpdateComment = async (commentId, updatedComment) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setIsError(false);
 
     try {
       const response = await fetch(`https://striveschool-api.herokuapp.com/api/comments/${commentId}`, {
@@ -95,16 +99,17 @@ const CommentArea = ({ bookAsin }) => {
         )
       );
     } catch (err) {
-      setError(err.message);
+      setIsError(true);
+      console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
-      {loading && <Spinner animation="border" />}
-      {error && <Alert variant="danger">{error}</Alert>}
+    <div className="text-center">
+      {isLoading && <Loading />}
+      {isError && <Error />}
       <CommentList
         comments={comments}
         onDelete={handleDeleteComment}
@@ -116,6 +121,7 @@ const CommentArea = ({ bookAsin }) => {
 };
 
 export default CommentArea;
+
 
 
 
