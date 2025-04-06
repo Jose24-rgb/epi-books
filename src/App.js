@@ -16,23 +16,23 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        {/* Navbar */}
+        
         <MyNav searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-        {/* Rotte dell'applicazione */}
+       
         <Routes>
-          <Route path="/" element={<AllTheBooks searchQuery={searchQuery} />} /> {/* Homepage */}
-          <Route path="/book/:asin" element={<BookDetails />} /> {/* Dettagli del libro */}
-          <Route path="*" element={<NotFound />} /> {/* Rotta di fallback per le pagine non trovate */}
+          <Route path="/" element={<AllTheBooks searchQuery={searchQuery} />} /> 
+          <Route path="/book/:asin" element={<BookDetails />} /> 
+          <Route path="*" element={<NotFound />} /> 
         </Routes>
 
-        {/* Altri contenuti */}
+        
         <Welcome />
         <Container className="text-center mt-4">
           <Button variant="primary">Esplora</Button>
         </Container>
 
-        {/* Footer */}
+        
         <MyFooter />
       </Router>
     </ThemeProvider>

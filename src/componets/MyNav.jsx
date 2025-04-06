@@ -6,7 +6,7 @@ function MyNav({ searchQuery, setSearchQuery }) {
   const { theme, toggleTheme } = useTheme();
 
   const handleReset = () => {
-    setSearchQuery(''); // Reset the search query
+    setSearchQuery('');
   };
 
   return (
@@ -20,7 +20,7 @@ function MyNav({ searchQuery, setSearchQuery }) {
             <Nav.Link href="#">About</Nav.Link>
             <Nav.Link href="#">Browse</Nav.Link>
           </Nav>
-          {/* Input di ricerca nella navbar */}
+  
           <Form className="d-flex ms-3">
             <Form.Control
               type="text"
@@ -28,7 +28,7 @@ function MyNav({ searchQuery, setSearchQuery }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {/* Pulsante di reset */}
+         
             <Button 
               variant="outline-secondary" 
               onClick={handleReset} 
@@ -38,7 +38,7 @@ function MyNav({ searchQuery, setSearchQuery }) {
               Reset
             </Button>
           </Form>
-          {/* Pulsante per cambiare tema */}
+         
           <Button variant={theme === 'light' ? 'dark' : 'light'} onClick={toggleTheme} className="ms-3">
             Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
           </Button>

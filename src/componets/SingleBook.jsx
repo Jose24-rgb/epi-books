@@ -7,7 +7,7 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
   const { theme } = useTheme();
 
   const handleSelectBook = () => {
-  // Deseleziona il libro se è già selezionato, altrimenti selezionalo
+ 
   setSelectedBookAsin((prevAsin) => (prevAsin === book.asin ? null : book.asin));
 };
 
