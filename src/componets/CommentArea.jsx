@@ -9,10 +9,9 @@ const CommentArea = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`; // Modifica qui per prendere tutti i commenti
+  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`;
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
 
-  // Recupera i commenti all'inizio, senza bisogno di selezionare un libro
   useEffect(() => {
     const fetchComments = async () => {
       setIsLoading(true);
@@ -33,7 +32,7 @@ const CommentArea = () => {
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
-          setComments(data); // Salva tutti i commenti ricevuti
+          setComments(data);
         } else {
           throw new Error('Nessun commento disponibile');
         }
@@ -46,7 +45,7 @@ const CommentArea = () => {
     };
 
     fetchComments();
-  }, []); // Questo effetto si esegue solo una volta, al caricamento del componente
+  }, []);
 
   const handleDeleteComment = async (commentId) => {
     setIsLoading(true);
@@ -110,13 +109,11 @@ const CommentArea = () => {
       {isLoading && <Loading />}
       {isError && <Error />}
 
-      {/* Modulo per aggiungere un nuovo commento */}
       <AddComment 
         bookAsin="book-asin-placeholder" 
         onCommentAdded={(newComment) => setComments((prevComments) => [newComment, ...prevComments])} 
       />
 
-      {/* Lista dei commenti */}
       <CommentList
         comments={comments}
         onDelete={handleDeleteComment}
