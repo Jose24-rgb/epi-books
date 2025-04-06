@@ -9,7 +9,7 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
     <ul>
       {comments.length > 0 ? (
         comments.map((comment) => (
-          <li key={comment.id}>
+          <li key={comment.id} data-testid="single-comment">
             {editingId === comment.id ? (
               <>
                 <Form.Control
@@ -58,6 +58,7 @@ const CommentList = ({ comments, onDelete, onUpdate }) => {
 };
 
 export default CommentList;
+
 
 
 

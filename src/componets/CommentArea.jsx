@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import CommentList from './CommentList';
 import AddComment from './AddComment';
-import Loading from './Loading'; // Importa il componente Loading
-import Error from './Error';     // Importa il componente Error
+import Loading from './Loading';
+import Error from './Error'; 
 
 const CommentArea = ({ bookAsin }) => {
   const [comments, setComments] = useState([]);
@@ -17,7 +17,7 @@ const CommentArea = ({ bookAsin }) => {
 
     const fetchComments = async () => {
       setIsLoading(true);
-      setIsError(false); // Resetta gli errori ad ogni nuovo fetch
+      setIsError(false);
 
       try {
         const response = await fetch(API_URL, {
@@ -39,10 +39,10 @@ const CommentArea = ({ bookAsin }) => {
           throw new Error('Nessun commento disponibile');
         }
       } catch (err) {
-        setIsError(true); // Imposta l'errore se qualcosa va storto
+        setIsError(true);
         console.error(err);
       } finally {
-        setIsLoading(false); // Al termine, ferma il loading
+        setIsLoading(false);
       }
     };
 

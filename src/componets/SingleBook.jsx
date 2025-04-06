@@ -14,30 +14,29 @@ function SingleBook({ book, selectedBookAsin, setSelectedBookAsin }) {
 
   return (
     <Card
-      data-testid="book-card"
-      style={{
-        backgroundColor: theme === 'light' ? '#ffffff' : '#495057',
-        color: theme === 'light' ? 'black' : 'white',
-        border: selectedBookAsin === book.asin ? '5px solid red' : 'none',
-      }}
-    >
-      <Card.Img
-        variant="top"
-        src={book.img}
-        alt={book.title}
-        onClick={handleSelectBook}
-        style={{ cursor: 'pointer' }}
-      />
-      <Card.Body>
-        <Card.Title>{book.title}</Card.Title>
-        <Card.Text>Prezzo: ${book.price}</Card.Text>
+  data-testid="book-card"
+  style={{
+    backgroundColor: theme === 'light' ? '#ffffff' : '#495057',
+    color: theme === 'light' ? 'black' : 'white',
+    border: selectedBookAsin === book.asin ? '5px solid red' : 'none',
+  }}
+>
+  <Card.Img
+    variant="top"
+    src={book.img}
+    alt={book.title}
+    onClick={handleSelectBook}
+    style={{ cursor: 'pointer' }}
+  />
+  <Card.Body>
+    <Card.Title>{book.title}</Card.Title>
+    <Card.Text>Prezzo: ${book.price}</Card.Text>
+    <Link to={`/book/${book.asin}`}>
+      <Button variant="primary">Vedi Dettagli</Button>
+    </Link>
+  </Card.Body>
+</Card>
 
-        {/* Pulsante per navigare alla pagina dei dettagli */}
-        <Link to={`/book/${book.asin}`}>
-          <Button variant="primary">Vedi Dettagli</Button>
-        </Link>
-      </Card.Body>
-    </Card>
   );
 }
 
