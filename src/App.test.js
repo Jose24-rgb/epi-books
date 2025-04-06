@@ -1185,14 +1185,19 @@ describe('Test del filtraggio dei libri via navbar', () => {
 
 
 
+
+
+
 describe('MyNav Component', () => {
   it('renderizza i link e il campo di ricerca', () => {
     const setSearchQuery = jest.fn();
 
     render(
-      <ThemeProvider>
-        <MyNav searchQuery="" setSearchQuery={setSearchQuery} />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider>
+          <MyNav searchQuery="" setSearchQuery={setSearchQuery} />
+        </ThemeProvider>
+      </MemoryRouter>
     );
 
     expect(screen.getByText(/Home/i)).toBeInTheDocument();
@@ -1207,9 +1212,11 @@ describe('MyNav Component', () => {
     const setSearchQuery = jest.fn();
 
     render(
-      <ThemeProvider>
-        <MyNav searchQuery="" setSearchQuery={setSearchQuery} />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider>
+          <MyNav searchQuery="" setSearchQuery={setSearchQuery} />
+        </ThemeProvider>
+      </MemoryRouter>
     );
 
     const input = screen.getByPlaceholderText(/Cerca un libro/i);
@@ -1222,9 +1229,11 @@ describe('MyNav Component', () => {
     const setSearchQuery = jest.fn();
 
     render(
-      <ThemeProvider>
-        <MyNav searchQuery="qualcosa" setSearchQuery={setSearchQuery} />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider>
+          <MyNav searchQuery="qualcosa" setSearchQuery={setSearchQuery} />
+        </ThemeProvider>
+      </MemoryRouter>
     );
 
     const resetButton = screen.getByRole('button', { name: /reset/i });
@@ -1235,9 +1244,11 @@ describe('MyNav Component', () => {
 
   it('cambia tema quando clicchi "Switch"', () => {
     render(
-      <ThemeProvider>
-        <MyNav searchQuery="" setSearchQuery={() => {}} />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider>
+          <MyNav searchQuery="" setSearchQuery={() => {}} />
+        </ThemeProvider>
+      </MemoryRouter>
     );
 
     const switchButton = screen.getByRole('button', {
@@ -1251,6 +1262,7 @@ describe('MyNav Component', () => {
     })).toBeInTheDocument();
   });
 });
+
 
 
 
