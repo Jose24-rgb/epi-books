@@ -8,6 +8,7 @@ const CommentArea = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [showComments, setShowComments] = useState(false); // New state to toggle visibility
 
   const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`;
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
@@ -104,26 +105,37 @@ const CommentArea = () => {
     }
   };
 
+  const toggleCommentsVisibility = () => {
+    setShowComments((prev) => !prev); // Toggle visibility on button click
+  };
+
   return (
     <div className="text-center">
       {isLoading && <Loading />}
       {isError && <Error />}
 
-      <AddComment 
-        bookAsin="book-asin-placeholder" 
-        onCommentAdded={(newComment) => setComments((prevComments) => [newComment, ...prevComments])} 
+      <AddComment
+        bookAsin="book-asin-placeholder"
+        onCommentAdded={(newComment) => setComments((prevComments) => [newComment, ...prevComments])}
       />
 
-      <CommentList
-        comments={comments}
-        onDelete={handleDeleteComment}
-        onUpdate={handleUpdateComment}
-      />
+      <button onClick={toggleCommentsVisibility} className="btn btn-primary my-3">
+        {showComments ? 'Nascondi recensioni' : 'Vedi recensioni'}
+      </button>
+
+      {showComments && (
+        <CommentList
+          comments={comments}
+          onDelete={handleDeleteComment}
+          onUpdate={handleUpdateComment}
+        />
+      )}
     </div>
   );
 };
 
 export default CommentArea;
+
 
 
 
