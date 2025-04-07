@@ -61,23 +61,25 @@ it('renders all the 150 books', () => {
 
 
 jest.mock('./componets/AddComment', () => () => <div data-testid="add-comment">AddComment Mock</div>);
+
 jest.mock('./componets/CommentList', () => ({ comments, onDelete, onUpdate }) => (
   <div data-testid="comment-list">
     {comments.map((c) => (
-      <div key={c.id}>
+      <div key={c._id}>
         <p>{c.comment}</p>
         <p>{c.author}</p>
       </div>
     ))}
   </div>
 ));
+
 jest.mock('./componets/Loading', () => () => <div data-testid="loading">Loading...</div>);
 jest.mock('./componets/Error', () => () => <div data-testid="error">Error!</div>);
 
 describe('CommentArea Component', () => {
   const mockComments = [
-    { id: '1', comment: 'Ottimo libro!', author: 'Alice' },
-    { id: '2', comment: 'Non mi è piaciuto.', author: 'Bob' },
+    { _id: '1', comment: 'Ottimo libro!', author: 'Alice' },
+    { _id: '2', comment: 'Non mi è piaciuto.', author: 'Bob' },
   ];
 
   beforeEach(() => {
@@ -94,14 +96,13 @@ describe('CommentArea Component', () => {
   });
 
   it('renderizza il componente base con AddComment e bottone', async () => {
-    render(<CommentArea />);
-
+    render(<CommentArea bookAsin="1234567890" />);
     expect(screen.getByTestId('add-comment')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /vedi recensioni/i })).toBeInTheDocument();
   });
 
   it('mostra i commenti dopo il click su "Vedi recensioni"', async () => {
-    render(<CommentArea />);
+    render(<CommentArea bookAsin="1234567890" />);
 
     const toggleButton = screen.getByRole('button', { name: /vedi recensioni/i });
     fireEvent.click(toggleButton);
@@ -115,7 +116,7 @@ describe('CommentArea Component', () => {
   });
 
   it('mostra e nasconde i commenti al toggle', async () => {
-    render(<CommentArea />);
+    render(<CommentArea bookAsin="1234567890" />);
     const button = screen.getByRole('button', { name: /vedi recensioni/i });
 
     fireEvent.click(button);
@@ -136,7 +137,7 @@ describe('CommentArea Component', () => {
       })
     );
 
-    render(<CommentArea />);
+    render(<CommentArea bookAsin="1234567890" />);
     const button = screen.getByRole('button', { name: /vedi recensioni/i });
     fireEvent.click(button);
 
@@ -1387,5 +1388,56 @@ describe('Test iniziale della pagina', () => {
 
     const commentElements = screen.queryAllByTestId('single-comment');
     expect(commentElements).toHaveLength(0);
+  });
+});
+
+
+
+
+
+
+beforeEach(() => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve([
+          {
+            _id: 'comment1',
+            comment: 'Libro molto coinvolgente!',
+            rate: 4,
+            author: 'Francesca',
+          },
+        ]),
+    })
+  );
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('Integrazione AllTheBooks + CommentArea', () => {
+  it('mostra le recensioni nel DOM quando clicchi su un libro', async () => {
+    render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <AllTheBooks searchQuery="silent corner" />
+        </ThemeProvider>
+      </MemoryRouter>
+    );
+
+    const img = await screen.findByRole('img', { name: /silent corner/i });
+    expect(img).toBeInTheDocument();
+
+    fireEvent.click(img);
+
+    const button = await screen.findByRole('button', { name: /vedi recensioni/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText(/coinvolgente/i)).toBeInTheDocument();
+      expect(screen.getByText(/francesca/i)).toBeInTheDocument();
+    });
   });
 });

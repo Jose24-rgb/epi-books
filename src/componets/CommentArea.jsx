@@ -4,22 +4,23 @@ import AddComment from './AddComment';
 import Loading from './Loading';
 import Error from './Error';
 
-const CommentArea = () => {
+const CommentArea = ({ bookAsin }) => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
-  const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`;
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
 
   useEffect(() => {
+    if (!bookAsin) return;
+
     const fetchComments = async () => {
       setIsLoading(true);
       setIsError(false);
 
       try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`https://striveschool-api.herokuapp.com/api/comments/${bookAsin}`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,12 +32,7 @@ const CommentArea = () => {
         }
 
         const data = await response.json();
-
-        if (Array.isArray(data) && data.length > 0) {
-          setComments(data);
-        } else {
-          throw new Error('Nessun commento disponibile');
-        }
+        setComments(data);
       } catch (err) {
         setIsError(true);
         console.error(err);
@@ -46,7 +42,7 @@ const CommentArea = () => {
     };
 
     fetchComments();
-  }, []);
+  }, [bookAsin]);
 
   const handleDeleteComment = async (commentId) => {
     setIsLoading(true);
@@ -64,7 +60,7 @@ const CommentArea = () => {
         throw new Error('Errore durante l\'eliminazione del commento');
       }
 
-      setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
+      setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
     } catch (err) {
       setIsError(true);
       console.error(err);
@@ -94,7 +90,7 @@ const CommentArea = () => {
       const updatedCommentData = await response.json();
       setComments((prevComments) =>
         prevComments.map((comment) =>
-          comment.id === commentId ? { ...comment, comment: updatedComment } : comment
+          comment._id === commentId ? { ...comment, comment: updatedComment } : comment
         )
       );
     } catch (err) {
@@ -114,14 +110,20 @@ const CommentArea = () => {
       {isLoading && <Loading />}
       {isError && <Error />}
 
-      <AddComment
-        bookAsin="book-asin-placeholder"
-        onCommentAdded={(newComment) => setComments((prevComments) => [newComment, ...prevComments])}
-      />
+      {bookAsin && (
+        <AddComment
+          bookAsin={bookAsin}
+          onCommentAdded={(newComment) =>
+            setComments((prevComments) => [newComment, ...prevComments])
+          }
+        />
+      )}
 
-      <button onClick={toggleCommentsVisibility} className="btn btn-primary my-3">
-        {showComments ? 'Nascondi recensioni' : 'Vedi recensioni'}
-      </button>
+      {bookAsin && (
+        <button onClick={toggleCommentsVisibility} className="btn btn-primary my-3">
+          {showComments ? 'Nascondi recensioni' : 'Vedi recensioni'}
+        </button>
+      )}
 
       {showComments && (
         <CommentList
