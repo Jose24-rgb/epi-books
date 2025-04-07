@@ -8,7 +8,7 @@ const CommentArea = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [showComments, setShowComments] = useState(false); // New state to toggle visibility
+  const [showComments, setShowComments] = useState(false);
 
   const API_URL = `https://striveschool-api.herokuapp.com/api/comments/`;
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkZmZhMzFlMTQwNjAwMTUzMTRkMzEiLCJpYXQiOjE3NDM0NjcxNzEsImV4cCI6MTc0NDY3Njc3MX0.Rqam_j1qPpqpkr3be5rA4njP_dGgHZ0yjwvdxai18HY';
@@ -106,7 +106,7 @@ const CommentArea = () => {
   };
 
   const toggleCommentsVisibility = () => {
-    setShowComments((prev) => !prev); // Toggle visibility on button click
+    setShowComments((prev) => !prev);
   };
 
   return (

@@ -15,6 +15,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 
 
+
 describe('Welcome Component', () => {
   it('dovrebbe montare correttamente e mostrare il messaggio di benvenuto', () => {
     render(<Welcome />);
@@ -53,41 +54,102 @@ it('renders all the 150 books', () => {
 
 
 
-jest.mock('./componets/AddComment', () => ({ onCommentAdded }) => (
-  <form>
-    <input
-      placeholder="Scrivi una recensione..."
-      onChange={() => {}}
-    />
-    <button onClick={() => onCommentAdded({ id: 'new', comment: 'New comment' })}>
-      Add Comment
-    </button>
-  </form>
+
+
+
+
+
+
+jest.mock('./componets/AddComment', () => () => <div data-testid="add-comment">AddComment Mock</div>);
+jest.mock('./componets/CommentList', () => ({ comments, onDelete, onUpdate }) => (
+  <div data-testid="comment-list">
+    {comments.map((c) => (
+      <div key={c.id}>
+        <p>{c.comment}</p>
+        <p>{c.author}</p>
+      </div>
+    ))}
+  </div>
 ));
+jest.mock('./componets/Loading', () => () => <div data-testid="loading">Loading...</div>);
+jest.mock('./componets/Error', () => () => <div data-testid="error">Error!</div>);
 
+describe('CommentArea Component', () => {
+  const mockComments = [
+    { id: '1', comment: 'Ottimo libro!', author: 'Alice' },
+    { id: '2', comment: 'Non mi è piaciuto.', author: 'Bob' },
+  ];
 
-it('renders CommentArea component', async () => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve([{ id: '1', comment: 'First comment' }]),
-    })
-  );
+  beforeEach(() => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockComments),
+      })
+    );
+  });
 
-  render(<CommentArea bookAsin="123" />);
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-  expect(screen.getByText(/Caricamento.../i)).toBeInTheDocument();
+  it('renderizza il componente base con AddComment e bottone', async () => {
+    render(<CommentArea />);
 
+    expect(screen.getByTestId('add-comment')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /vedi recensioni/i })).toBeInTheDocument();
+  });
 
-  const commentText = await screen.findByText((content, element) =>
-    content.includes("First comment") && element.tagName === 'P'
-  );
-  expect(commentText).toBeInTheDocument();
+  it('mostra i commenti dopo il click su "Vedi recensioni"', async () => {
+    render(<CommentArea />);
 
+    const toggleButton = screen.getByRole('button', { name: /vedi recensioni/i });
+    fireEvent.click(toggleButton);
 
-  const reviewInputField = await screen.findByPlaceholderText(/scrivi una recensione.../i);
-  expect(reviewInputField).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('comment-list')).toBeInTheDocument();
+      expect(screen.getByText('Ottimo libro!')).toBeInTheDocument();
+      expect(screen.getByText('Alice')).toBeInTheDocument();
+      expect(screen.getByText('Non mi è piaciuto.')).toBeInTheDocument();
+    });
+  });
+
+  it('mostra e nasconde i commenti al toggle', async () => {
+    render(<CommentArea />);
+    const button = screen.getByRole('button', { name: /vedi recensioni/i });
+
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(screen.getByTestId('comment-list')).toBeInTheDocument();
+    });
+
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(screen.queryByTestId('comment-list')).not.toBeInTheDocument();
+    });
+  });
+
+  it('gestisce errori API mostrando <Error />', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: false,
+      })
+    );
+
+    render(<CommentArea />);
+    const button = screen.getByRole('button', { name: /vedi recensioni/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error')).toBeInTheDocument();
+    });
+  });
 });
+
+
+
+
+
 
 
 
@@ -1187,7 +1249,6 @@ describe('Test del filtraggio dei libri via navbar', () => {
 
 
 
-
 describe('MyNav Component', () => {
   it('renderizza i link e il campo di ricerca', () => {
     const setSearchQuery = jest.fn();
@@ -1328,50 +1389,3 @@ describe('Test iniziale della pagina', () => {
     expect(commentElements).toHaveLength(0);
   });
 });
-
-
-
-
-
-
-
-
-
-/*global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve([
-      { _id: '1', comment: 'Ottimo libro!', date: '2025-04-06' },
-      { _id: '2', comment: 'Mi è piaciuto molto', date: '2025-04-05' },
-    ]),
-  })
-);
-
-describe('Test della selezione del libro e caricamento recensioni', () => {
-  test('verifica che le recensioni siano caricate quando un libro viene selezionato', async () => {
-    // Rendering del componente App, che contiene la logica per selezionare un libro
-    render(
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    );
-
-  
-    const bookCard = await screen.findByTestId('book-card');
-    expect(bookCard).toBeInTheDocument();
-
-    
-    fireEvent.click(bookCard);
-
-   
-    await waitFor(() => {
-      const commentsList = screen.getByRole('list');
-      expect(commentsList).toBeInTheDocument();
-    });
-
-    
-    const comment1 = screen.getByText('Ottimo libro!');
-    const comment2 = screen.getByText('Mi è piaciuto molto');
-    expect(comment1).toBeInTheDocument();
-    expect(comment2).toBeInTheDocument();
-  });
-}); */ /* (NON SONO RIUSCITO CON QUESTO)*/
